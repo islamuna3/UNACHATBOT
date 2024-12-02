@@ -1,0 +1,674 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Upload Excel and Manage Questions</title>-->
+<!--    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">-->
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">-->
+<!--    <script src="https://cdn.tiny.cloud/1/3aa76efj97gqybphmadxgq9afo814b3rdbn4mp5fa8ueechr/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>-->
+
+<!--    <style>-->
+<!--        body {-->
+<!--            font-family: Tajawal, sans-serif;-->
+<!--            background-color: #f5f5f5;-->
+<!--        }-->
+
+<!--        .container {-->
+<!--            margin-top: 20px;-->
+<!--        }-->
+
+<!--        .card {-->
+<!--            margin-bottom: 20px;-->
+<!--            border-radius: 10px;-->
+<!--            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);-->
+<!--        }-->
+
+<!--        .card-header {-->
+<!--            background-color: #007bff;-->
+<!--            color: white;-->
+<!--            border-bottom: none;-->
+<!--            border-radius: 10px 10px 0 0;-->
+<!--        }-->
+
+<!--        .card-body {-->
+<!--            padding: 20px;-->
+<!--        }-->
+
+<!--        .form-group {-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+
+<!--        .form-control {-->
+<!--            border-radius: 10px;-->
+<!--            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);-->
+<!--            border: 1px solid #ced4da;-->
+<!--            padding: 10px;-->
+<!--            font-size: 16px;-->
+<!--        }-->
+
+<!--        .form-control:focus {-->
+<!--            border-color: #007bff;-->
+<!--            box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);-->
+<!--        }-->
+
+<!--        .form-group label {-->
+<!--            font-weight: bold;-->
+<!--            color: #333;-->
+<!--        }-->
+
+<!--        .btn-success,-->
+<!--        .btn-danger,-->
+<!--        .btn-warning,-->
+<!--        .btn-primary {-->
+<!--            border-radius: 5px;-->
+<!--            padding: 10px 15px;-->
+<!--            font-size: 16px;-->
+<!--        }-->
+
+<!--        .btn-home {-->
+<!--            background-color: #007bff;-->
+<!--            border: none;-->
+<!--            border-radius: 5px;-->
+<!--            color: white;-->
+<!--            position: absolute;-->
+<!--            top: 10px;-->
+<!--            right: 10px;-->
+<!--            font-family: Tajawal, sans-serif;-->
+<!--            padding: 10px 20px;-->
+<!--        }-->
+
+<!--        .btn-home:hover {-->
+<!--            background-color: #032141;-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        .btn:hover {-->
+<!--            opacity: 0.8;-->
+<!--        }-->
+
+<!--        .error {-->
+<!--            color: red;-->
+<!--            font-weight: bold;-->
+<!--        }-->
+
+<!--        .alert {-->
+<!--            border-radius: 5px;-->
+<!--        }-->
+
+<!--        .mic-button {-->
+<!--            background-color: #007bff;-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            border-radius: 5px;-->
+<!--            padding: 10px 15px;-->
+<!--            cursor: pointer;-->
+<!--            font-size: 16px;-->
+<!--        }-->
+
+<!--        .mic-button:hover {-->
+<!--            opacity: 0.8;-->
+<!--        }-->
+
+<!--        .dictation-container {-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+
+<!--        /* Adjustments for tables on smaller screens */-->
+<!--        .table-responsive {-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+
+<!--        .table thead {-->
+<!--            background-color: #007bff;-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        .table th,-->
+<!--        .table td {-->
+<!--            font-size: 14px;-->
+<!--            text-align: center;-->
+<!--        }-->
+
+<!--        /* Responsive adjustments */-->
+<!--        @media (max-width: 767.98px) {-->
+<!--            body {-->
+<!--                padding: 10px;-->
+<!--            }-->
+
+<!--            .btn-home {-->
+<!--                position: static;-->
+<!--                margin-bottom: 15px;-->
+<!--                width: 100%;-->
+<!--                text-align: center;-->
+<!--            }-->
+
+<!--            .mic-button {-->
+<!--                padding: 8px 16px;-->
+<!--                font-size: 14px;-->
+<!--            }-->
+
+<!--            .form-control {-->
+<!--                font-size: 14px;-->
+<!--            }-->
+
+<!--            .btn-success,-->
+<!--            .btn-danger,-->
+<!--            .btn-warning,-->
+<!--            .btn-primary {-->
+<!--                font-size: 14px;-->
+<!--                padding: 8px 10px;-->
+<!--                width: 100%;-->
+<!--                margin-bottom: 10px;-->
+<!--            }-->
+
+<!--            .table-responsive {-->
+<!--                overflow-x: auto;-->
+<!--            }-->
+
+<!--            .table th,-->
+<!--            .table td {-->
+<!--                font-size: 12px;-->
+<!--            }-->
+<!--        }-->
+
+<!--        @media (min-width: 768px) {-->
+<!--            .btn-home {-->
+<!--                top: 10px;-->
+<!--                right: 10px;-->
+<!--            }-->
+<!--        }-->
+
+<!--        @media (max-width: 576px) {-->
+<!--            .form-group label {-->
+<!--                font-size: 14px;-->
+<!--            }-->
+
+<!--            .form-control {-->
+<!--                padding: 8px;-->
+<!--            }-->
+<!--        }-->
+
+<!--        @media (max-width: 375px) {-->
+<!--            .btn-home {-->
+<!--                font-size: 14px;-->
+<!--                padding: 8px;-->
+<!--            }-->
+
+<!--            .btn {-->
+<!--                font-size: 12px;-->
+<!--                padding: 8px 10px;-->
+<!--            }-->
+
+<!--            .card {-->
+<!--                padding: 10px;-->
+<!--            }-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+
+<!--<body>-->
+<!--    &lt;!&ndash; Add Home Button &ndash;&gt;-->
+<!--    <a href="{% url 'home' %}" class="btn btn-home">اللوحة الرئيسية</a>-->
+
+<!--    <div class="container">-->
+<!--        &lt;!&ndash; Add New Question &ndash;&gt;-->
+<!--        <div class="row">-->
+<!--            <div class="col-12">-->
+<!--                <div class="card">-->
+<!--                    <div class="card-header">-->
+<!--                        <h2 class="h4">Add New Question</h2>-->
+<!--                    </div>-->
+<!--                    <div class="card-body">-->
+<!--                        <form method="post" action="{% url 'add_question' %}">-->
+<!--                            {% csrf_token %}-->
+<!--                            &lt;!&ndash; Question Input &ndash;&gt;-->
+<!--                            <div class="form-group">-->
+<!--                                <label for="id_question">Question:</label>-->
+<!--                                <textarea name="question" id="id_question" class="form-control" rows="4"></textarea>-->
+<!--                            </div>-->
+<!--                            &lt;!&ndash; Answer Type Selection &ndash;&gt;-->
+<!--                            <div class="form-group">-->
+<!--                                <label>Answer Type:</label>-->
+<!--                                <div>-->
+<!--                                    <label>-->
+<!--                                        <input type="radio" name="answer_type" value="single" checked onchange="toggleAnswerType()"> Single Answer-->
+<!--                                    </label>-->
+<!--                                    <label class="ml-3">-->
+<!--                                        <input type="radio" name="answer_type" value="multiple" onchange="toggleAnswerType()"> Multiple Answers-->
+<!--                                    </label>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            &lt;!&ndash; Single Answer Input &ndash;&gt;-->
+<!--                            <div class="form-group answer-single">-->
+<!--                                <label for="id_single_answer">Answer:</label>-->
+<!--                                <textarea name="single_answer" id="id_single_answer" class="form-control" rows="3"></textarea>-->
+<!--                            </div>-->
+<!--                            &lt;!&ndash; Multiple Answers Input &ndash;&gt;-->
+<!--                            <div class="form-group answer-multiple d-none">-->
+<!--                                <label>Answers:</label>-->
+<!--                                <div id="answers-container">-->
+<!--                                    <div class="d-flex mb-2">-->
+<!--                                        <textarea name="multiple_answers[]" class="form-control mr-2" rows="2"></textarea>-->
+<!--                                        <button type="button" class="btn btn-danger btn-sm" onclick="removeAnswer(this)">Remove</button>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <button type="button" class="btn btn-primary btn-sm" onclick="addAnswer()">Add More Answer</button>-->
+<!--                            </div>-->
+<!--                            &lt;!&ndash; Submit Button &ndash;&gt;-->
+<!--                            <button type="submit" class="btn btn-success">Add Question</button>-->
+<!--                        </form>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; All Questions Table &ndash;&gt;-->
+<!--        <div class="row">-->
+<!--            <div class="col-12">-->
+<!--                <div class="card">-->
+<!--                    <div class="card-header">-->
+<!--                        <h2 class="h4">All Data from Database</h2>-->
+<!--                    </div>-->
+<!--                    <div class="card-body">-->
+<!--                        <div class="table-responsive">-->
+<!--                            <table class="table table-bordered table-hover">-->
+<!--                                <thead>-->
+<!--                                    <tr>-->
+<!--                                        <th>Question</th>-->
+<!--                                        <th>Answer</th>-->
+<!--                                        <th>Actions</th>-->
+<!--                                    </tr>-->
+<!--                                </thead>-->
+<!--                                <tbody>-->
+<!--                                    {% for item in all_data %}-->
+<!--                                    <tr>-->
+<!--                                        <td>{{ item.question|safe }}</td>-->
+<!--                                        <td>-->
+<!--                                            <ul>-->
+<!--                                                {% for answer in item.answers.all %}-->
+<!--                                                <li>{{ answer.answer_text }}</li>-->
+<!--                                                {% endfor %}-->
+<!--                                            </ul>-->
+<!--                                        </td>-->
+<!--                                        <td>-->
+<!--                                            {% if item.id %}-->
+<!--                                            <a href="{% url 'edit_question' item.id %}" class="btn btn-warning btn-sm">Edit</a>-->
+<!--                                            <a href="{% url 'delete_question' item.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this question?');">Delete</a>-->
+<!--                                            {% else %}-->
+<!--                                            <span class="text-muted">Edit/Delete</span>-->
+<!--                                            {% endif %}-->
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                    {% endfor %}-->
+<!--                                </tbody>-->
+<!--                            </table>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--    </div>-->
+
+<!--    <script>-->
+<!--        tinymce.init({-->
+<!--            selector: '#id_single_answer',-->
+<!--            directionality: 'rtl',-->
+<!--            plugins: 'link image media lists textcolor',-->
+<!--            toolbar: 'undo redo | bold italic underline | fontsizeselect forecolor backcolor | alignleft aligncenter alignright alignjustify | link image media | bullist numlist',-->
+<!--            menubar: false,-->
+<!--            branding: false,-->
+<!--            height: 200,-->
+<!--            setup: function (editor) {-->
+<!--                editor.on('init', function () {-->
+<!--                    this.getContainer().style.direction = 'rtl';-->
+<!--                });-->
+<!--            }-->
+<!--        });-->
+
+<!--        function toggleAnswerType() {-->
+<!--            const singleAnswerDiv = document.querySelector('.answer-single');-->
+<!--            const multipleAnswerDiv = document.querySelector('.answer-multiple');-->
+<!--            const selectedType = document.querySelector('input[name="answer_type"]:checked').value;-->
+
+<!--            if (selectedType === 'single') {-->
+<!--                singleAnswerDiv.classList.remove('d-none');-->
+<!--                multipleAnswerDiv.classList.add('d-none');-->
+<!--            } else {-->
+<!--                singleAnswerDiv.classList.add('d-none');-->
+<!--                multipleAnswerDiv.classList.remove('d-none');-->
+<!--            }-->
+<!--        }-->
+
+<!--        function addAnswer() {-->
+<!--            const container = document.getElementById('answers-container');-->
+<!--            const newAnswer = document.createElement('div');-->
+<!--            newAnswer.className = 'd-flex mb-2';-->
+<!--            newAnswer.innerHTML = `-->
+<!--                <textarea name="multiple_answers[]" class="form-control mr-2" rows="2"></textarea>-->
+<!--                <button type="button" class="btn btn-danger btn-sm" onclick="removeAnswer(this)">Remove</button>-->
+<!--            `;-->
+<!--            container.appendChild(newAnswer);-->
+<!--        }-->
+
+<!--        function removeAnswer(button) {-->
+<!--            const parentDiv = button.parentElement;-->
+<!--            parentDiv.remove();-->
+<!--        }-->
+<!--    </script>-->
+
+<!--    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>-->
+<!--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
+<!--</body>-->
+
+<!--</html>-->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Excel and Manage Questions</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdn.tiny.cloud/1/3aa76efj97gqybphmadxgq9afo814b3rdbn4mp5fa8ueechr/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <style>
+        body {
+            font-family: Tajawal, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            border-bottom: none;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ced4da;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .btn-success,
+        .btn-danger,
+        .btn-warning,
+        .btn-primary {
+            border-radius: 5px;
+            padding: 10px 15px;
+            font-size: 16px;
+        }
+
+        .btn-home {
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-family: Tajawal, sans-serif;
+            padding: 10px 20px;
+        }
+
+        .btn-home:hover {
+            background-color: #032141;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+
+        .alert {
+            border-radius: 5px;
+        }
+
+        .mic-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .mic-button:hover {
+            opacity: 0.8;
+        }
+
+        .dictation-container {
+            margin-bottom: 20px;
+        }
+
+        /* Adjustments for tables on smaller screens */
+        .table-responsive {
+            margin-bottom: 20px;
+        }
+
+        .table thead {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .table th,
+        .table td {
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 767.98px) {
+            body {
+                padding: 10px;
+            }
+
+            .btn-home {
+                position: static;
+                margin-bottom: 15px;
+                width: 100%;
+                text-align: center;
+            }
+
+            .mic-button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+
+            .form-control {
+                font-size: 14px;
+            }
+
+            .btn-success,
+            .btn-danger,
+            .btn-warning,
+            .btn-primary {
+                font-size: 14px;
+                padding: 8px 10px;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .table-responsive {
+                overflow-x: auto;
+            }
+
+            .table th,
+            .table td {
+                font-size: 12px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .btn-home {
+                top: 10px;
+                right: 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .form-group label {
+                font-size: 14px;
+            }
+
+            .form-control {
+                padding: 8px;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .btn-home {
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            .btn {
+                font-size: 12px;
+                padding: 8px 10px;
+            }
+
+            .card {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+    <!-- Add Home Button -->
+    <a href="{% url 'home' %}" class="btn btn-home">اللوحة الرئيسية</a>
+
+    <div class="container">
+        <!-- Question Form -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="h4">Add New Question</h2>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="{% url 'add_question' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="id_question">Question:</label>
+                                <textarea name="question" id="id_question" class="form-control" rows="4">{{ question_form.question.value }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_answer">Answer:</label>
+                                <textarea name="answer" id="id_answer" class="form-control" rows="4">{{ question_form.answer.value }}</textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success">Add Question</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All Data from Database -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="h4">All Data from Database</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Question</th>
+                                        <th>Answer</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in all_data %}
+                                    <tr>
+                                        <td>{{ item.question|safe }}</td>
+                                        <td>{{ item.answer|safe }}</td>
+                                        <td>
+                                            {% if item.id %}
+                                            <a href="{% url 'edit_question' item.id %}" class="btn btn-warning btn-sm">Edit</a>
+                                            <a href="{% url 'delete_question' item.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this question?');">Delete</a>
+                                            {% else %}
+                                            <span class="text-muted">Edit/Delete</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Initialize TinyMCE -->
+    <script>
+        tinymce.init({
+            selector: '#id_answer',
+            directionality: 'rtl',
+            plugins: 'link image media lists textcolor',
+            toolbar: 'undo redo | bold italic underline | fontsizeselect forecolor backcolor | alignleft aligncenter alignright alignjustify | link image media | bullist numlist',
+            menubar: false,
+            branding: false,
+            height: 200,
+            setup: function (editor) {
+                editor.on('init', function () {
+                    this.getContainer().style.direction = 'rtl';
+                });
+            }
+        });
+    </script>
+
+    <!-- Include Necessary Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

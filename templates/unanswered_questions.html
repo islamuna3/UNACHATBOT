@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unanswered Questions</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .btn-home {
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            position: absolute;
+            top: 10px;
+            right: 0px;
+            font-family: Tajawal, sans-serif;
+        }
+        .btn-home:hover {
+            background-color: #032141;
+            color: white;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .list-group-item {
+            position: relative;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            background-color: #ffffff;
+        }
+        .btn-edit {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-edit:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+        .btn-delete {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+        .btn-delete:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+        .btn-add-answer {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .btn-add-answer:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        .btn-delete-all {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+        .btn-delete-all:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="{% url 'home' %}" class="btn btn-home">اللوحة الرئيسية</a>
+
+    <div class="container">
+        <h1 class="mt-5">Unanswered Questions</h1>
+        <form action="{% url 'delete_all_unanswered_questions' %}" method="post" class="mb-3">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-delete-all btn-sm">Delete All</button>
+        </form>
+        <ul class="list-group mt-3">
+            {% for question in unanswered_questions %}
+                <li class="list-group-item">
+                    {{ question.question }}
+                    <a href="{% url 'edit_question_to_unanswered_question' question.id %}" class="btn btn-edit btn-sm float-right ml-2">Edit</a>
+                    <a href="{% url 'delete_question_to_unanswered_question' question.id %}" class="btn btn-delete btn-sm float-right ml-2">Delete</a>
+                    <a href="{% url 'add_answer_to_unanswered_question' question.id %}" class="btn btn-add-answer btn-sm float-right ml-2">Add Answer</a>
+                </li>
+            {% empty %}
+                <li class="list-group-item">No unanswered questions.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

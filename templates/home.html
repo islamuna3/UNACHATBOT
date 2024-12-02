@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to UNA</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome CSS for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background: linear-gradient(135deg, #6e45e2, #88d3ce); /* Gradient background */
+            color: #fff; /* Light text color for contrast */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+            height: 100vh; /* Full viewport height */
+            margin: 0; /* Remove default margin */
+            display: flex; /* Flexbox for centering content */
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Stack content vertically */
+        }
+
+        .message-box {
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            max-width: 90%; /* Responsive width */
+            width: 500px; /* Max width */
+            text-align: center;
+            color: #333; /* Dark text color for readability */
+            margin: 20px; /* Margin for spacing */
+        }
+
+        .message-box h1 {
+            font-size: 2.5rem; /* Slightly smaller font size for responsiveness */
+            margin-bottom: 20px;
+        }
+
+        .message-box p {
+            font-size: 1.15rem; /* Adjusted font size for better readability */
+            margin-bottom: 30px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 12px 20px;
+            font-size: 1.125rem;
+            border-radius: 50px; /* Rounded button corners */
+            margin: 10px; /* Margin to separate buttons */
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        .footer {
+            text-align: center;
+            color: #fff;
+            margin-top: 20px;
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+
+        .footer .social-icons a {
+            color: #fff;
+            margin: 0 10px;
+            font-size: 1.5rem;
+        }
+
+        .badge {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        /* Add a responsive design */
+        @media (max-width: 768px) {
+            .message-box {
+                padding: 30px;
+                width: 90%;
+            }
+
+            .btn-primary {
+                width: 100%;
+                font-size: 1rem;
+                padding: 10px;
+            }
+
+            .message-box h1 {
+                font-size: 2rem; /* Smaller font size for smaller screens */
+            }
+
+            .message-box p {
+                font-size: 1rem; /* Smaller font size for smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="message-box">
+        <h1>Welcome to UNA Chatbot</h1>
+        <p>We are here to assist you with any questions or information you need. How can we help you today?</p>
+        <a href="ask_questions/" class="btn btn-primary btn-lg">Start Chatting</a>
+        <a href="questions/" class="btn btn-primary btn-lg">Questions</a>
+        <a href="unanswered_questions/" class="btn btn-primary btn-lg">Unanswered Questions</a>
+        <a href="fixed_questions/" class="btn btn-primary btn-lg">Fixed Questions</a>
+        <a href="counter_view/" class="btn btn-primary btn-lg">Counter View</a>
+    </div>
+
+
+    {% if user.is_authenticated %}
+        <p>Hello, {{ user.username }}!</p>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+    {% else %}
+        <p>You are not logged in.</p>
+        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+    {% endif %}
+
+
+
+    <div class="footer">
+        <p>&copy; 2024 <a href="https://una-oic.org/" target="_blank" style="color: darkgreen;">UNA-OIC.ORG</a> All rights reserved.</p>
+        <div class="social-icons">
+            <a href="https://whatsapp.com/channel/0029Va9VuuE1XquahZEY5S1S" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            <a href="https://twitter.com/UNAOIC" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.facebook.com/unaoic" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://una-oic.org/" target="_blank"><i class="fas fa-globe"></i></a>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

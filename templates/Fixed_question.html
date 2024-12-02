@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Fixed Questions</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background: #f0f2f5;
+            font-family: Tajawal, sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        h1 {
+            color: #007bff;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .card-body {
+            padding: 30px;
+        }
+        .table thead th {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+        }
+        .table tbody td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        /* Home Button Styling */
+        .home-button {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Home Button (in Arabic "الرئيسية") -->
+    <div class="home-button">
+        <a href="{% url 'home' %}" class="btn btn-primary" style="font-family: Tajawal, sans-serif;">اللوحة الرئيسية</a>
+    </div>
+
+    <div class="container">
+        <h1>Manage Fixed Questions</h1>
+
+        <!-- Add New Question Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                Add a New Fixed Question
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.question.label_tag }}
+                        {{ form.question }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.answer.label_tag }}
+                        {{ form.answer }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Question</button>
+                </form>
+            </div>
+        </div>
+        <!-- List of Fixed Questions -->
+        <h2>All Fixed Questions</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover mt-3">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Question</th>
+                        <th>Answer</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for question in fixed_questions %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ question.question }}</td>
+                            <td>{{ question.answer }}</td>
+                            <td>
+                                <a href="{% url 'edit_fixed_question' question.id %}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{% url 'delete_fixed_question' question.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this question?');">Delete</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4">No fixed questions found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            {% if messages %}
+                {% for message in messages %}
+                    toastr.options = {
+                        "closeButton": true,
+                        "progressBar": true,
+                        "positionClass": "toast-top-right",
+                        "timeOut": "5000"
+                    };
+
+                    {% if message.tags == "success" %}
+                        toastr.success("{{ message }}");
+                    {% elif message.tags == "warning" %}
+                        toastr.warning("{{ message }}");
+                    {% elif message.tags == "error" %}
+                        toastr.error("{{ message }}");
+                    {% elif message.tags == "info" %}
+                        toastr.info("{{ message }}");
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        });
+    </script>
+
+    <!-- TinyMCE Integration -->
+    <script src="https://cdn.tiny.cloud/1/3aa76efj97gqybphmadxgq9afo814b3rdbn4mp5fa8ueechr/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#id_answer',
+            directionality: 'rtl',
+            plugins: 'link image media lists textcolor',
+            toolbar: 'undo redo | bold italic underline | fontsizeselect forecolor backcolor | alignleft aligncenter alignright alignjustify | link image media | bullist numlist',
+            menubar: false,
+            branding: false,
+            height: 200,
+            setup: function (editor) {
+                editor.on('init', function () {
+                    this.getContainer().style.direction = 'rtl';
+                });
+            }
+        });
+    </script>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

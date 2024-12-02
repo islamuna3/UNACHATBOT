@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إحصائيات الأسئلة</title>
+    <style>
+        /* إعدادات عامة للصفحة */
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .btn-home {
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            position: absolute;
+            top: 10px;
+            right: 0px;
+            font-family: Tajawal, sans-serif;
+        }
+        .btn-home:hover {
+            background-color: #032141;
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* تصميم الجدول */
+        table {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1rem;
+            text-transform: uppercase;
+        }
+
+        td {
+            font-size: 1rem;
+            color: #333;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e6ffe6;
+            color: #333;
+            transform: scale(1.02);
+            transition: transform 0.3s ease;
+        }
+
+        /* تأثيرات الحركات */
+        table {
+            transform: scale(0.95);
+            opacity: 0;
+            animation: fadeInScale 0.6s ease forwards;
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        tr {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInRow 0.6s ease forwards;
+        }
+
+        tr:nth-child(odd) {
+            animation-delay: 0.1s;
+        }
+
+        tr:nth-child(even) {
+            animation-delay: 0.2s;
+        }
+
+        @keyframes fadeInRow {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* استعلامات الوسائط */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            th, td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+
+            table {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.2rem;
+                margin-bottom: 10px;
+            }
+
+            th, td {
+                padding: 8px;
+                font-size: 0.8rem;
+            }
+
+            table {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'home' %}" class="btn btn-home">اللوحة الرئيسية</a>
+
+    <div>
+        <h1>أكثر 10 أسئلة تم طرحها</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>السؤال</th>
+                    <th>النسبة المئوية</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for question in questions_data %}
+                <tr>
+                    <td>{{ question.question }}</td>
+                    <td>{{ question.percentage }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

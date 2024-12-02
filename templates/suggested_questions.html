@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suggested Questions</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #0b0c0d, #2b2d2f);
+            font-family: 'Arial', sans-serif;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            margin-top: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 800px;
+            transition: transform 0.4s, box-shadow 0.4s, background 0.4s;
+        }
+        .welcome-message {
+            margin-bottom: 30px;
+            font-size: 24px;
+            color: #00bfae;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+        }
+        .suggested-questions {
+            margin-top: 20px;
+        }
+        .suggested-questions li {
+            list-style: none;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="welcome-message">
+            Welcome! Here are some suggested questions you might find interesting:
+        </div>
+        <ul class="suggested-questions">
+            {% for question in suggested_questions %}
+                <li>{{ question.question }}</li>
+            {% empty %}
+                <li>No suggested questions available.</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'get_question_from_user' %}" class="btn btn-primary">Ask Your Question</a>
+    </div>
+</body>
+</html>

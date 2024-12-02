@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Question</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tiny.cloud/1/3aa76efj97gqybphmadxgq9afo814b3rdbn4mp5fa8ueechr/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <style>
+        body {
+            background: linear-gradient(to right, #e2e2e2, #ffffff);
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            background: #ffffff;
+        }
+        .card-header {
+            background: #007bff;
+            color: #ffffff;
+            border-bottom: none;
+            border-radius: 15px 15px 0 0;
+            text-align: center;
+            padding: 20px;
+        }
+        .card-header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 600;
+        }
+        .card-body {
+            padding: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .form-control {
+            border-radius: 12px;
+            border: 1px solid #ced4da;
+            padding: 12px 15px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background: #f8f9fa;
+        }
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(38, 143, 255, 0.25);
+            outline: none;
+        }
+        .btn-success {
+            background-color: #007bff;
+            border-color: #007bff;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-size: 16px;
+            color: #ffffff;
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-success:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+            transform: scale(1.05);
+        }
+        .btn-success::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
+            transition: transform 0.5s;
+            transform: translate(-50%, -50%) scale(0);
+            z-index: 0;
+        }
+        .btn-success:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .btn-success span {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1>Edit Question</h1>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-success"><span>Save Changes</span></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        tinymce.init({
+            selector: '#id_answer',
+            directionality: 'rtl',
+            plugins: 'link image media lists textcolor',
+            toolbar: 'undo redo | bold italic underline | fontsizeselect forecolor backcolor | alignleft aligncenter alignright alignjustify | link image media | bullist numlist',
+            menubar: false,
+            branding: false,
+            height: 200,
+            setup: function (editor) {
+                editor.on('init', function () {
+                    this.getContainer().style.direction = 'rtl';
+                });
+            }
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
