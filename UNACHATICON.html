@@ -1,0 +1,640 @@
+<!--una chatbot-->
+
+<!DOCTYPE html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+
+    <!-- Tailwind CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        font-family: "Tajawal", sans-serif; /* استخدام Tajawal كخط افتراضي */
+      }
+      .content {
+        flex: 1; /* يضمن أن المحتوى يمتد ليأخذ المساحة المتاحة قبل الفوتر */
+      }
+      .chat-icon {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        color: #007057;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+        z-index: 999;
+      }
+      .chat-icon:hover {
+        transform: scale(1.1);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+      }
+      .chat-icon-img {
+        width: 60px; /* Adjust width to fit your design */
+        height: 60px; /* Adjust height to fit your design */
+        border-radius: 50%;
+        object-fit: cover; /* Ensures the image covers the space without distortion */
+      }
+      .chat-icon-img.open {
+        animation: rotate 0.5s ease;
+      }
+      .rotate-close {
+        animation: rotaterev 0.5s ease;
+      }
+      .chat-container {
+        position: fixed;
+        bottom: 15px;
+        right: 20px;
+        max-width: 500px;
+        height: 500px;
+        justify-content: space-between;
+        /* width: 100%; */
+        background-color: #fff;
+        border-radius: 20px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        display: none;
+        flex-direction: column;
+        transition: transform 0.4s ease, opacity 0.4s ease, box-shadow 0.4s ease;
+        transform: translateY(120%);
+        opacity: 0;
+        z-index: 1000;
+      }
+      .chat-container.open {
+        display: flex;
+        transform: translateY(-90px);
+        opacity: 1;
+        /* animation: fadeIn 0.4s ease; */
+        animation: hopen 0.5s ease;
+        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.4);
+      }
+      .chat-box {
+        max-height: 600px;
+        overflow-y: auto;
+        padding: 20px;
+        border-radius: 0 0 20px 20px;
+        background-size: contain; /* لجعل الخلفية تغطي كامل مساحة الشات */
+        animation: fadeIn 0.5s ease;
+        display: flex; /* تمكين خصائص flex */
+        flex-direction: column; /* ترتيب العناصر عمودياً */
+      }
+      .question,
+      .answer {
+        font-family: "Tajawal", sans-serif;
+        margin: 10px 0;
+        padding: 12px 18px;
+        border-radius: 20px;
+        word-wrap: break-word;
+        line-height: 1.5;
+        animation: fadeIn 0.5s ease;
+        display: inline-flex; /* استخدام inline-flex بدلاً من inline-block لتمكين التوزيع */
+        position: relative;
+        max-width: 80%; /* عرض أقصى للمحتوى */
+        width: fit-content; /* لجعل العرض يتناسب مع المحتوى */
+      }
+      .question {
+        background-color: #007057;
+        color: white;
+        align-self: flex-end; /* دفع الرسالة إلى الجهة اليمنى */
+        text-align: left;
+        border-radius: 20px 20px 0 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        margin-left: auto; /* دفع العنصر إلى الجهة اليمنى */
+      }
+      .answer {
+        background-color: #f5f5f5;
+        color: #007057;
+        align-self: flex-start; /* دفع الرد إلى الجهة اليسرى */
+        text-align: left;
+        border-radius: 20px 20px 20px 0;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        margin-right: auto; /* دفع العنصر إلى الجهة اليسرى */
+        display: flex; /* استخدام flex لتمكين التوزيع */
+        flex-direction: column; /* جعل العناصر في عمود */
+        align-items: flex-start; /* توسيط العناصر عمودياً */
+        width: fit-content; /* عرض يتناسب مع المحتوى */
+      }
+      .answer a {
+        color: #ff0000; /* لون اللينك */
+        font-weight: bold; /* جعل النص عريضًا */
+        text-decoration: underline; /* إضافة خط تحت اللينك */
+      }
+      .answer a:hover {
+        color: #f85050; /* لون اللينك عند مرور المؤشر */
+      }
+      .similar-questions {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end; /* جميع العناصر في الجهة اليمنى */
+      }
+      .similar-questions button {
+        background-color: #007057;
+        color: white;
+        text-align: left;
+        border-radius: 20px 20px 0 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        font-family: "Tajawal", sans-serif;
+        margin: 10px 0;
+        padding: 12px 18px;
+        border-radius: 20px;
+        max-width: 80%;
+        word-wrap: break-word;
+        line-height: 1.5;
+        animation: fadeIn 0.5s ease;
+        display: inline-block;
+        position: relative;
+        margin-left: auto; /* دفع العنصر إلى الجهة اليمنى */
+      }
+      .similar-questions-label {
+        font-family: "Tajawal", sans-serif;
+        color: #007057;
+        margin-bottom: 5px;
+        text-align: right; /* جعل النص يظهر على اليمين */
+      }
+      .similar-questions button:hover {
+        color: #ccc; /* لون أفتح عند مرور المؤشر، يمكن تعديل هذا */
+      }
+      .loading {
+        display: flex; /* Ensure the container is flexible */
+        justify-content: center; /* Center the dots horizontally */
+        align-items: center; /* Center the dots vertically */
+        height: 50px; /* Adjust height as needed */
+        padding: 20px; /* Adjust padding for spacing */
+        visibility: hidden; /* Hide by default */
+      }
+      .loading.show {
+        visibility: visible; /* Show loading dots when active */
+      }
+      .dot {
+        width: 10px; /* Dot width */
+        height: 10px; /* Dot height */
+        margin: 0 5px; /* Space between dots */
+        background-color: #007057; /* Dot color */
+        border-radius: 50%; /* Make dots circular */
+        display: inline-block;
+        animation: bounce 1.5s infinite; /* Animation properties */
+      }
+      .dot:nth-child(2) {
+        animation-delay: 0.3s; /* Delay for the second dot */
+      }
+      .dot:nth-child(3) {
+        animation-delay: 0.6s; /* Delay for the third dot */
+      }
+      @keyframes bounce {
+        0%,
+        80%,
+        100% {
+          transform: scale(0);
+        }
+        40% {
+          transform: scale(1);
+        }
+      }
+      .input-group {
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+      }
+      .input-group input {
+        border: 2px solid #000;
+        color: #007057;
+        background-color: #ebebeb;
+        padding: 10px;
+        font-size: 14px;
+        flex: 1;
+        transition: border-color 0.3s;
+      }
+      .input-group input:focus {
+        border-color: #b7b8b8; /* Darker green */
+        outline: none;
+      }
+      .input-group-append {
+        display: flex;
+      }
+      .input-group-append .btn-primary {
+        background: linear-gradient(
+          145deg,
+          #007057,
+          #007057
+        ); /* Gradient background for a modern look */
+        border: none; /* Remove the border for a cleaner look */
+        color: white; /* Text color */
+        border-radius: 50%; /* Keep the button circular */
+        width: 50px; /* Button width */
+        height: 50px; /* Button height */
+        font-size: 16px; /* Text size */
+        transition: all 0.3s ease-in-out; /* Smooth transition for hover effects */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.15); /* Add a subtle shadow for depth */
+        padding: 0; /* Ensure the icon or text is centered */
+      }
+      .input-group-append .btn-primary:hover {
+        background: linear-gradient(
+          145deg,
+          #007057,
+          #007057
+        ); /* Inverse gradient on hover */
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+        transform: translateY(-2px); /* Slight lift on hover */
+      }
+      .input-group-append .btn-primary:active {
+        background-color: #007057; /* Maintain color on click */
+        border-color: #007057; /* Maintain border color on click */
+        box-shadow: none; /* Remove shadow on click */
+        transform: translateY(0); /* Reset lift on click */
+      }
+      .microphone-container {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        z-index: 1000;
+      }
+      .microphone-icon {
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+        font-size: 24px;
+        border: #000;
+      }
+      .microphone-icon.start {
+        background-color: #cfd0e7;
+        color: #1d3b34;
+      }
+      .microphone-icon.stop {
+        background-color: #007057;
+        color: #fff;
+      }
+      .chat-header {
+        font-family: "Tajawal", sans-serif;
+        display: flex;
+        flex-direction: row;
+        height: 100px;
+        background-color: #fff;
+        color: #000;
+        border-radius: 20px 20px 0 0;
+        text-align: center;
+        font-weight: bold;
+        position: relative;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes hopen {
+        from {
+          height: 100px;
+        }
+        to {
+          height: 400px;
+        }
+      }
+      @keyframes hopenrev {
+        from {
+          height: 400px;
+        }
+        to {
+          height: 100px;
+        }
+      }
+      @keyframes rotate {
+        from {
+          rotate: 0deg;
+        }
+        to {
+          rotate: 360deg;
+        }
+      }
+      @keyframes rotaterev {
+        from {
+          rotate: 0deg;
+        }
+        to {
+          rotate: -360deg;
+        }
+      }
+      .chat-footer {
+        font-family: "Tajawal", sans-serif;
+        display: flex;
+        border-top: 1px solid #f1f1f1;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 0 0 15px 15px;
+      }
+      .chat-footer input {
+        border: 2px solid #b7b8b8;
+        border-radius: 15px;
+        padding: 10px;
+        font-size: 16px;
+        flex: 1;
+        outline: none;
+        margin-right: 10px;
+      }
+      .chat-footer button {
+        background-color: #007057;
+        color: #fff;
+        border: none;
+        border-radius: 15px;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 13px;
+        transition: background-color 0.3s;
+      }
+      .chat-footer button:hover {
+        background-color: #1d3b34;
+      }
+      .colorSpecial-1 {
+        background: #007057;
+      }
+      .colorSpecial-2 {
+        color: #007057;
+      }
+      @keyframes pulse {
+        50% {
+          opacity: 0.6;
+        }
+      }
+      .microphone-icon.animate-pulse {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        scale: 1.2;
+      }
+    </style>
+
+  </head>
+  <body>
+
+    <div class="chat-icon" id="chat-icon">
+      <img
+        src="https://i.ibb.co/2yrh9LR/chatbot2.png"
+        alt="Chat Icon"
+        class="chat-icon-img rotate-close md:h-[60px] md:w-[60px] sm:h-[40px] sm:w-[40px] h-[30px] w-[30px]"
+        id="chat-icon-img"
+      />
+    </div>
+
+    <div
+      class="chat-container font-semibold lg:w-5/12 md:w-7/12 sm:w-8/12 w-11/12 overflow-hidden"
+      id="chat-container">
+      <div class="chat-header flex justify-evenly sm:px-10 px-2 w-full mx-auto border-b h-16">
+        <div class="grid m-auto xs:text-sm text-xs tracking-wide flex-row gap-2">
+          <p class="inline-block">
+            <img src="https://una-oic.org/wp-content/uploads/2024/08/hed-2.png" />
+          </p>
+          <p class="inline-block">أنا شات بوت يونا .. أنا هنا لمساعدك ولا زلت تحت التدريب</p>
+        </div>
+        <span
+          id="close-chat"
+          class="border flex flex-col my-auto items-center rounded-full text-center sm:h-10 sm:w-10 h-7 w-7 cursor-pointer text-base sm:text-2xl text-red-700 bg-white"
+          >&times;</span
+        >
+      </div>
+
+      <div class="chat-box" id="chat-box"></div>
+      <div class="loading" id="loading">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+
+      <div class="chat-footer">
+        <div class="input-group px-2 flex justify-center flex-row">
+          <input
+            type="text"
+            id="user-question"
+            class="h-10 m-auto rounded-md lg:w-8/12 md:w-8/12 w-9/12"
+            placeholder="كيف يمكنني مساعدتك ؟"
+          />
+          <div class="input-group-append my-1 flex justify-evenly lg:w-4/12 md:w-4/12 sm:w-5/12 w-6/12">
+            <button
+              class="send-btn rounded-md h-10 sm:w-7/12 w-6/12 font-extralight sm:font-semibold text-center text-white"
+              id="send-btn"
+              type="button"
+            >
+              إرسال
+            </button>
+            <div
+              class="microphone-icon stop my-auto w-6/12"
+              id="microphone-icon"
+            >
+              <i class="fas fa-microphone"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="microphone-container"></div>
+    <div class="content"></div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+
+    <script>
+      $(document).ready(function () {
+        // Toggle chat container
+        $("#chat-icon").click(function () {
+          $("#chat-icon-img").toggleClass("rotate-close open");
+          $("#chat-container").toggleClass("open");
+        });
+
+        // Close chat container
+        $("#close-chat").click(function () {
+          $("#chat-icon-img").toggleClass("rotate-close open");
+          $("#chat-container").toggleClass("open");
+        });
+
+        const maxQuestionsPerDay = 50;
+        let remainingQuestions = maxQuestionsPerDay;
+        let today = new Date().toISOString().slice(0, 10);
+
+        // Check localStorage for the question count and reset if a new day
+        if (localStorage.getItem("lastQuestionDate") !== today) {
+          remainingQuestions = maxQuestionsPerDay;
+          localStorage.setItem("remainingQuestions", maxQuestionsPerDay);
+          localStorage.setItem("lastQuestionDate", today);
+        } else {
+          remainingQuestions = parseInt(localStorage.getItem("remainingQuestions"));
+        }
+
+        updateRemainingQuestionsDisplay();
+
+        // Function to send question
+        function sendQuestion() {
+          if (remainingQuestions <= 0) {
+            alert("لقد وصلت إلى الحد الأقصى لعدد الأسئلة اليومية.");
+            return;
+          }
+
+          let question = $("#user-question").val().trim();
+          if (question === "") return;
+
+          $("#loading").addClass("show");
+          $("#chat-box").append(`<div class="question">${question}</div>`);
+          $("#user-question").val("");
+          $("#chat-box").scrollTop($("#chat-box")[0].scrollHeight);
+
+          $.ajax({
+            url: "https://unachatbot.onrender.com/ask_questions/",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ question }),
+            headers: {
+              "X-CSRFToken": $("meta[name='csrf-token']").attr("content"),
+            },
+            success: function (response) {
+              remainingQuestions--;
+              localStorage.setItem("remainingQuestions", remainingQuestions);
+              updateRemainingQuestionsDisplay();
+
+              if (response.similar_questions && response.similar_questions.length > 0) {
+                $("#chat-box").append('<div class="answer">هل تقصد؟</div>');
+                response.similar_questions.forEach(function (q) {
+                  $("#chat-box").append(`
+                    <div class="similar-questions" id="similar-questions-${q.id}">
+                      <button class="btn btn-link" data-id="${q.id}" data-answer="${q.answer}">${q.question}</button>
+                    </div>`);
+                });
+
+                // Attach event handler for dynamic buttons
+                $(".btn-link").click(function () {
+                  let question_id = $(this).data("id");
+                  handleSimilarQuestion(question_id);
+                });
+              } else if (response.answer) {
+                $("#chat-box").append(`<div class="answer">${response.answer}</div>`);
+              } else {
+                $("#chat-box").append('<div class="answer">عذرًا، لا أملك إجابة لذلك.</div>');
+              }
+              $("#chat-box").scrollTop($("#chat-box")[0].scrollHeight);
+              $("#loading").removeClass("show");
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+              console.error("AJAX request failed:", { status: jqXHR.status, statusText: textStatus, error: errorThrown, responseText: jqXHR.responseText });
+              $("#chat-box").append('<div class="answer">حدث خطأ أثناء جلب الإجابة. حاول مرة أخرى لاحقًا.</div>');
+              $("#chat-box").scrollTop($("#chat-box")[0].scrollHeight);
+              $("#loading").removeClass("show");
+            },
+          });
+        }
+
+        function handleSimilarQuestion(question_id) {
+          $.get(
+            `https://unachatbot.onrender.com/ask_questions/${question_id}/`,
+            function (response) {
+              if (response.answer) {
+                $("#chat-box").append(`<div class="answer">${response.answer}</div>`);
+              } else {
+                $("#chat-box").append('<div class="answer">عذرًا، لم أتمكن من العثور على إجابة لذلك.</div>');
+              }
+              $("#chat-box").scrollTop($("#chat-box")[0].scrollHeight);
+            }
+          );
+        }
+
+        // Function to update the display of remaining questions
+        function updateRemainingQuestionsDisplay() {
+          $("#remaining-questions").text(`الأسئلة المتبقية اليوم: ${remainingQuestions}`);
+        }
+
+        // Microphone functionality
+        let recognition;
+        let isListening = false;
+
+        if ('webkitSpeechRecognition' in window) {
+          recognition = new webkitSpeechRecognition();
+          recognition.lang = 'ar-SA'; // Set language to Arabic
+          recognition.interimResults = false;
+          recognition.maxAlternatives = 1;
+        } else {
+          alert("Your browser doesn't support speech recognition.");
+        }
+
+        $("#microphone-icon").click(function () {
+          if (!isListening && recognition) {
+            recognition.start();
+            isListening = true;
+            $("#microphone-icon").addClass("listening");
+          } else if (recognition) {
+            recognition.stop();
+            isListening = false;
+            $("#microphone-icon").removeClass("listening");
+          }
+        });
+
+        recognition.onresult = function (event) {
+          let transcript = event.results[0][0].transcript;
+          $("#user-question").val(transcript);
+          sendQuestion(); // Automatically send the recognized question
+          $("#microphone-icon").removeClass("listening");
+          isListening = false;
+        };
+
+        recognition.onerror = function (event) {
+          console.error("Speech recognition error", event);
+          alert("Error recognizing speech. Please try again.");
+          $("#microphone-icon").removeClass("listening");
+          isListening = false;
+        };
+
+        recognition.onend = function () {
+          isListening = false;
+          $("#microphone-icon").removeClass("listening");
+        };
+
+        // Event listeners
+        $("#send-btn").click(sendQuestion);
+        $("#user-question").keypress(function (event) {
+          if (event.which === 13) sendQuestion();
+        });
+      });
+    </script>
+  </body>
+</html>
+
+<!--una chatbot-->
