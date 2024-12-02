@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'jf29BphWoc5P5LmRxlK9Dd7h-YxSyjZ-lFS5d74_U0ZxgW17DB0wRA7w1J6x38A')
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'unachatbot.onrender.com', 'https://unachatbot-hxhu.onrender.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'unachatbot-hxhu.onrender.com']
 
 CORS_ALLOW_ALL_ORIGINS = True
 
